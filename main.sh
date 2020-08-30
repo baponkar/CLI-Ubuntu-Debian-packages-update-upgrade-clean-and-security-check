@@ -103,3 +103,5 @@ then
 	#mplayer /home/uniteworld/github/my_programs/bash_scripts/command_line_updater/thankyou.mp3
 	exit
 fi
+rm temp
+rm temp.*
