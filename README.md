@@ -1,5 +1,10 @@
 # CLI Ubuntu/Debain packages Update, Upgrade, Clean and security check.
 -----------------------------------------
+![Debian package](https://img.shields.io/badge/debain-10.5-blue)
+![Ubuntu OS](https://img.shields.io/badge/ubuntu-18.04-red)
+![bash](https://img.shields.io/badge/bash-4.4.20(1)-blue)
+![License](https://img.shields.io/badge/GNU%20GPL%20-v%203.0-red)
+![rkhunter](https://img.shields.io/badge/Rootkit%20Hunter%20-v%20--%201.4.-red)
 #### Version : 1.0
 #### License :  The GNU General Public License
 #### Dependence : required additional packages is '[rkhunter](http://rkhunter.sourceforge.net/)'.
