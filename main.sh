@@ -24,7 +24,29 @@ u="\e[0m"                                                               #reinsta
 echo -e "$c--------------------------------------------------------------------------------$u"
 echo -e " $y \n\t\t\t\U1F984 Command Line Updater 1.0.0 $u"   
 echo -e "$c--------------------------------------------------------------------------------$u"
-read -p "Please insert SUDO password with enter  : " -s pass  #taking sudo password into pass variable
+
+
+	
+while true
+do
+	read -p "Please insert SUDO password with enter  : " -s pass  #taking sudo password into pass variable
+	echo "$pass" | sudo su
+	if [[  $? == 0 ]]; then
+		break
+	else
+		echo  -e "$rYou typed wrong password! Please try again...$u"
+	fi 
+done
+
+rkhunter --version
+if [[ $? != 0 ]]; then
+	echo "You Dont have installed rkhunter package in your system.\nWithout it you cant get security check. "
+	read -p "Do you like to install rkhunter  [Y/n]  : " u_op
+	if [[ "$u_op" == "y"|| "$u_op"  == "Y" ]]; then
+		echo "$pass" | sudo apt install rkhunter
+	fi
+fi 
+
 echo "$pass" | sudo apt-get update  #Update packages
 echo -e "$g \t\tUpdate completed. $u"
 echo "$pass" | sudo apt-get upgrade -y  #upgade packages
@@ -37,10 +59,16 @@ echo "$pass" | sudo apt-get autoremove -y  #remove the break packages
 echo -e "$g \t\tCorrupted packages removed.$u"    #removing breacked package                                         
 echo "$pass" | sudo rm -r /home/$USER/.local/share/Trash/files/*>>temp.*
 echo -e "$g \t\tTrash Folder Cleaned. $u"                       #clear trash folder
-echo "$pass" | sudo pip3 install --upgrade pip  #Python packages update
+python3  --version
+if [[ $? -eq 0 ]]; then
+	echo "$pass" | sudo pip3 install --upgrade pip  #Python packages update
+	if [[ $? -eq 0 ]]; then
+		echo "$pass" | sudo pip install --upgrade pip  #Python packages update
+	fi
+fi
 echo -e "$g \t\tPython Packages Updated $u"                                         
 echo -e "\n\t\t $g All Updates  & Upgrades are completed.$u" #info message
-echo -e "\n\t\t $g Do You like to security  Check  of this System? Type [Y/n] : $u $r\n\t\t[Info:It will take  time to complte!]$u"
+echo -e "\n\t\t $g Do You like to security  Check  of this System? Type [Y/n] : $u $r\n\t\t\t[Info:It will take  time to complte!]$u"
 echo -n "::"
 read -n 1 cho  #reading user choice
 if [[ $cho == 'y' || $cho == 'Y' ]]
@@ -51,7 +79,8 @@ then
 	now=$(date +%d%m%Y%r)
 	echo "System last run :$now" >> temp
 	cat -n /var/log/rkhunter.log | grep -i warning >> temp
-	cat temp 
+	warning=$(cat temp)
+	echo -e "$r $warning $u" 
 elif [[ $cho == 'n' || $cho == 'N' ]]
 then
 	echo -e "$g[ok]$u"

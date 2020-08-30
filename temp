@@ -1,0 +1,18 @@
+The rkhunter security risks.
+
+System last run :3008202009:50:44 PM IST
+    18	[21:46:40] Info: No mail-on-warning address configured
+    55	[21:46:41] Info: Using syslog for some logging - facility/priority level is 'authpriv.warning'.
+  1743	[21:50:28]   Checking for suspicious (large) shared memory segments [ Warning ]
+  1744	[21:50:28] Warning: The following suspicious (large) shared memory segments have been found:
+  1853	[21:50:44]   Checking for hidden files and directories       [ Warning ]
+  1854	[21:50:44] Warning: Hidden directory found: /etc/.java
+The rkhunter security risks.
+
+System last run :3008202010:10:45 PM IST
+    18	[22:07:00] Info: No mail-on-warning address configured
+    55	[22:07:00] Info: Using syslog for some logging - facility/priority level is 'authpriv.warning'.
+  1743	[22:10:31]   Checking for suspicious (large) shared memory segments [ Warning ]
+  1744	[22:10:31] Warning: The following suspicious (large) shared memory segments have been found:
+  1853	[22:10:44]   Checking for hidden files and directories       [ Warning ]
+  1854	[22:10:44] Warning: Hidden directory found: /etc/.java
