@@ -48,7 +48,7 @@ Which can Install by
 $  sudo apt install rkhunter -y
 ```
 ```diff
-+ *This shell script will autometically  perform the  following operations* :
++ This shell script will autometically  perform the  following operations :
 ```
 - [x] Update packages.
 - [x] Upgrade packages.
