@@ -60,4 +60,7 @@ $  sudo apt install rkhunter -y
 - [x]  Security check of Debian/Ubuntu based system by rkhunter tool.
 - [x] Showing all warning about security .
 
+* Screenshot
+![Screendhot](screenshot.png)
+
 * :+1: I will appreciate any comments and upgrade of this code.Thankyou
