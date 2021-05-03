@@ -1,99 +1,83 @@
-#---------------------------------------------------------------------------------------------------------------->|
-#********Ubuntu Command  Line  Auto Update ,Upgrade and System Check**********  |
-#	Author 			 : Bapon Kar                                                                                      |
-#	Create Date  : 12/02/2019                                                                                         |
-#	Description  :  This is a Command-line bash script.                                            |
-#						     This script updating ,upgrading ,Checking any                              |
-#						     suspicious activity in your system  and also cleaning.After         |
-#               		     completed the job it will send a GUI notification.                         |
-# Version         :   1.0.0                                                                                                    |
-#	Last Update : 30/08/2020                                                                                          |
-#	License : GNU gpl v3.0\                                                                                            |
-#	git link : https://github.com/baponkar                                                                    |
-#------------------------------------------------------------------------------------------------------------------>|
+#---------------------------------------------------------------------------------------------------------------
+#This script update and upgrade installed packages and also removed broken packages
+#Building Date : 02/05/2021
+#Last Update : 02/05/2021
+#Builder : Bapon Kar
+#Third Party packages : zenity which can installed by 'sudo apt update -y && sudo apt install zenity -y' command
+#Download from : https://github.com/baponkar/gui_update.sh
+#License : GNU GPL v 3.0
+#---------------------------------------------------------------------------------------------------------------
+
+
 #!/bin/bash
-r="\e[1;31m"                                                            #red color
-g="\e[1;32m"                                                            #grreen color
-y="\e[1;33m"                                                            #yellow color
-b="\e[1;34m"                                                            #blue color
-m=="\e[1;35m"                                                           #magenta color
-c="\e[1;36m"                                                            #cyan color
-w="\e[1;37m"                                                            #white color
-u="\e[0m"                                                               #reinstall default color
-#-------------------------------------------------------------------------------------------------------->
-echo -e "$c--------------------------------------------------------------------------------$u"
-echo -e " $y \n\t\t\t\U1F984 Command Line Updater 1.0.0 $u"   
-echo -e "$c--------------------------------------------------------------------------------$u"
+r="\e[1;31m"   #red color
+u="\e[0m"     #reinstall default color
 
 
-	
-read -p "Please insert SUDO password with enter  : " -s pass  #taking sudo password into pass variable
-
-
-rkhunter --version
-if [[ $? != 0 ]]; then
-	echo "You Dont have installed rkhunter package in your system.\nWithout it you cant get security check. "
-	read -p "Do you like to install rkhunter  [Y/n]  : " u_op
-	if [[ "$u_op" == "y"|| "$u_op"  == "Y" ]]; then
-		echo "$pass" | sudo apt -S install rkhunter
+function bell_sound(){
+	tput bel
+	if [[ $? -ne 0 ]]
+	then
+		printf "\a"
 	fi
-fi 
+}
 
-echo "$pass" | sudo -S apt-get update  #Update packages
-echo -e "$g \t\tUpdate completed. $u"
-echo "$pass" | sudo -S apt-get upgrade -y  #upgade packages
-echo -e "$g \t\tUpgrade completed. $u"                                          
-echo "$pass" | sudo -S apt-get dist-upgrade -y  #Distribution upgrade
-echo -e "$g \t\tDistribution Upgrade completed. $u"                                          
-echo "$pass" | sudo -S apt-get autoclean -y    #cleaning of breaking packges
-echo -e "$g \t\tSystem cleaned. $u"                                              
-echo "$pass" | sudo -S apt-get autoremove -y  #remove the break packages
-echo -e "$g \t\tCorrupted packages removed.$u"    #removing breacked package                                         
-echo "$pass" | sudo -S rm -r /home/$USER/.local/share/Trash/files/*>>temp.*
-echo -e "$g \t\tTrash Folder Cleaned. $u"                       #clear trash folder
-#python3  --version
-#if [[ $? -eq 0 ]]; then
-#	echo "$pass" | sudo pip3 install --upgrade pip  #Python packages update
-#	if [[ $? -eq 0 ]]; then
-#		echo "$pass" | sudo pip install --upgrade pip  #Python packages update
-#	fi
-#fi
-#echo -e "$g \t\tPython Packages Updated $u"                                         
-echo -e "\n\t\t $g All Updates  & Upgrades are completed.$u" #info message
-echo -e "\n\t\t $g Do You like to security  Check  of this System? Type [Y/n] : $u $r\n\t\t\t[Info:It will take  time to complte!]$u"
-echo -n "::"
-read -n 1 cho  #reading user choice
-if [[ $cho == 'y' || $cho == 'Y' ]]
+#check internet is connect or not
+
+
+#Checking either zwnity installed or not
+zenity --version
+if [[ $? -ne 0 ]]
 then
-	echo "$pass" | sudo -S  rkhunter --sk --propupd 
-	echo "$pass" | sudo -S rkhunter --sk -c
-	echo -e "The rkhunter security risks.\n"  >> temp
-	now=$(date +%d%m%Y%r)
-	echo "System last run :$now" >> temp
-	cat -n /var/log/rkhunter.log | grep -i warning >> temp
-	warning=$(cat temp)
-	echo -e "$r $warning $u" 
-elif [[ $cho == 'n' || $cho == 'N' ]]
-then
-	echo -e "$g[ok]$u"
+	bell_sound
+	echo -e "$r Please run \'~$ sudo apt install zenity\'\n before run this script $u" #zenity installation command
+	zenity --warning --text="No Zenity packages found" --width=320 --height=150 --timeout=3 --title="GUI Update & Upgrade"
+	zenity --question --text="Do you like to installed it in your machine?" --width=320 --height=150 --timeout=5 --title="GUI Update & Upgrade"
+	if [[ $? -eq 0 ]]
+	then
+		pass=$(zenity --password --width=320 --height=150 --timeout=10 --title="GUI Update & Upgrade") 
+		$pass | sudo apt install zenity -y
+	else
+		exit
+	fi
 else
-	echo -e '$rWrong Option!$u'
-fi
-echo -e "$c--------------------------------------------------------------------------------$u"
-echo -e " $y \n\t\t\t\U1F984 Command Line Updater 1.0.0 $u"        
-echo -e "$c--------------------------------------------------------------------------------$u"
-echo -e "\n\t\t $r Do You wanna Reebot? Type [Y/n]  : $u"                     #Asking to put a user choice
-echo -n "::"
-#mplayer /home/uniteworld/github/my_programs/bash_scripts/command_line_updater/reboot_system.mp3
-read -n 1 choice        #reading user choice
+	pass=$(zenity --password --width=320 --height=150 --timeout=10 --title="GUI Update & Upgrade") #Storing password into pass variable
+	(
+	echo 25
+	echo "# Updating..."
+	echo "$pass" | sudo -S apt-get update -y 1> success.txt 2> error.txt
+	
+	echo 30
+	echo "# Upgrading..."
+	echo "$pass" | sudo -S apt-get upgrade -y 1>> success.txt 2>> error.txt   
 
-if [[ $choice == 'y' || $choice == 'Y' ]]
-then
-	reboot
-elif [[ $choice == 'n' || $choice == 'N' ]]
-then
-	#mplayer /home/uniteworld/github/my_programs/bash_scripts/command_line_updater/thankyou.mp3
-	exit
+	echo 70
+	echo "# Dist. Upgrading.."
+	echo "$pass" | sudo -S apt-get dist-upgrade -y 1>> success.txt 2>> error.txt
+
+	echo 90
+	echo "# Cleaning..."
+	echo "$pass" | sudo -S apt-get autoclean -y 1>> success.txt 2>> error.txt
+
+	echo 95
+	echo "# Removing..."
+	echo "$pass" | sudo -S apt-get autoremove -y 1>> success.txt 2>> error.txt
+
+	echo 100
+	echo "# All Done!"
+
+) | zenity --title "GUI Update & Upgrade Bash script.." --progress --auto-close --auto-kill --width=320 --height=150 --title="GUI Update & Upgrade"
+	bell_sound
+
+
 fi
-rm temp
-rm temp.*
+
+if [[ -s error.txt ]]
+then
+	zenity --text-info --filename="error.txt" --text="Error" --width=320 --height=150 --title="GUI Update & Upgrade"
+else
+	zenity --info  --text="The Script runs successfully!\n There is no Error!" --width=320 --height=150 --title="GUI Update & Upgrade"
+fi
+
+rm -r error.txt
+rm -r success.txt
